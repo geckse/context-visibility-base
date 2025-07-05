@@ -63,7 +63,9 @@
            class="search-input" 
            placeholder="Search nodes..."
            [(ngModel)]="searchText"
-           (input)="onSearchChange()">
+           (input)="onSearchChange()"
+           (mousedown)="$event.stopPropagation()"
+           (click)="$event.stopPropagation()">
   </div>
 
   <!-- Info Panel -->
@@ -72,5 +74,8 @@
     <div>Links: {{ data.links.length }}</div>
     <div>FPS: {{ fps.toFixed(1) }}</div>
     <div>Tool: {{ selectedTool }}</div>
+    <div *ngIf="searchText" class="search-results-info">
+      Found: {{ getSearchResultsCount() }} nodes
+    </div>
   </div>
 </div>

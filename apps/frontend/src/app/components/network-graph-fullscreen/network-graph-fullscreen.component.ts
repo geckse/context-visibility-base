@@ -99,6 +99,9 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
   private lassoPath: {x: number, y: number}[] = [];
   private selectedNodes: Set<string> = new Set();
   
+  // Search state
+  private searchResults: Set<string> = new Set();
+  
   // Canvas dimensions
   private width: number = 0;
   private height: number = 0;
@@ -140,6 +143,12 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
   }
 
   startDrag(event: MouseEvent) {
+    // Only start drag if the target is the drag handle or container (not the input)
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'INPUT') {
+      return; // Don't drag when clicking on the input
+    }
+    
     this.isDraggingInput = true;
     const rect = this.textInputRef.nativeElement.getBoundingClientRect();
     this.dragOffset.x = event.clientX - rect.left;
@@ -178,8 +187,11 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
   }
 
   onSearchChange() {
-    // Search functionality will be implemented later
-    console.log('Search:', this.searchText);
+    this.performSearch();
+  }
+
+  getSearchResultsCount(): number {
+    return this.searchResults.size;
   }
 
   private initializeCanvas() {
@@ -459,8 +471,14 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
       // Simple rendering for very large datasets when zoomed out
       this.data.nodes.forEach(node => {
         if (node.x !== undefined && node.y !== undefined) {
-          ctx.fillStyle = this.color(node.group);
-          ctx.fillRect(node.x - 2, node.y - 2, 4, 4);
+          // Highlight search results even in simple mode
+          if (this.searchResults.has(node.id)) {
+            ctx.fillStyle = '#ff6b6b';
+            ctx.fillRect(node.x - 3, node.y - 3, 6, 6);
+          } else {
+            ctx.fillStyle = this.color(node.group);
+            ctx.fillRect(node.x - 2, node.y - 2, 4, 4);
+          }
         }
       });
     } else {
@@ -491,9 +509,12 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
         
         // Draw node border
         if (showSmallNodes) {
-          // Highlight selected nodes
+          // Highlight selected nodes or search results
           if (this.selectedNodes.has(node.id)) {
             ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = Math.max(3, 4 / scale);
+          } else if (this.searchResults.has(node.id)) {
+            ctx.strokeStyle = '#ff6b6b';
             ctx.lineWidth = Math.max(3, 4 / scale);
           } else {
             ctx.strokeStyle = this.getDarkerColor(fillColor);
@@ -512,9 +533,10 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
         
         ctx.globalAlpha = 1;
         
-        // Draw labels for nearby nodes
-        if (showLabels && this.isNodeNearMouse(node)) {
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary').trim() || '#333';
+        // Draw labels for nearby nodes or search results
+        if (showLabels && (this.isNodeNearMouse(node) || this.searchResults.has(node.id))) {
+          ctx.fillStyle = this.searchResults.has(node.id) ? '#ff6b6b' : 
+            getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary').trim() || '#333';
           ctx.font = `${Math.max(10, 14 / scale)}px Arial`;
           ctx.textAlign = 'left';
           ctx.fillText(node.label, node.x + nodeSize + 4, node.y + 4);
@@ -797,7 +819,7 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
       
       // Create radial gradient - color in center, transparent at edges
       const clusterColor = this.clusterColors(cluster.id.toString());
-      const opacity = Math.min(0.3, scale * 0.6); // Slightly higher for gradient effect
+      const opacity = Math.min(0.3, scale * 0.7); // Slightly higher for gradient effect
       
       // Create radial gradient
       const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
@@ -806,12 +828,12 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
       const rgb = this.hexToRgb(clusterColor);
       if (rgb) {
         gradient.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`); // Color in center
-        gradient.addColorStop(0.7, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity * 0.3})`); // Fade
+        gradient.addColorStop(0.7, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity * 0.4})`); // Fade
         gradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`); // Transparent at edge
       } else {
         // Fallback if color parsing fails - use CSS color with opacity
         gradient.addColorStop(0, clusterColor);
-        gradient.addColorStop(0.5, clusterColor + '80'); // Semi-transparent
+        gradient.addColorStop(0.7, clusterColor + '80'); // Semi-transparent
         gradient.addColorStop(1, clusterColor + '00'); // Transparent
       }
       
@@ -999,5 +1021,119 @@ export class NetworkGraphFullscreenComponent implements OnInit, OnChanges, After
     }
     
     return inside;
+  }
+
+  private performSearch() {
+    this.searchResults.clear();
+    
+    if (!this.searchText || this.searchText.trim().length === 0) {
+      this.render();
+      return;
+    }
+    
+    const searchTerm = this.searchText.toLowerCase().trim();
+    
+    // Search through nodes
+    this.data.nodes.forEach(node => {
+      // Search in label
+      if (node.label && node.label.toLowerCase().includes(searchTerm)) {
+        this.searchResults.add(node.id);
+        return;
+      }
+      
+      // Search in metadata
+      if (node.payload?.metadata) {
+        const metadata = node.payload.metadata;
+        
+        // Search in title
+        if (metadata.title && metadata.title.toLowerCase().includes(searchTerm)) {
+          this.searchResults.add(node.id);
+          return;
+        }
+        
+        // Search in domain
+        if (metadata.domain && metadata.domain.toLowerCase().includes(searchTerm)) {
+          this.searchResults.add(node.id);
+          return;
+        }
+        
+        // Search in summary
+        if (metadata.summary && metadata.summary.toLowerCase().includes(searchTerm)) {
+          this.searchResults.add(node.id);
+          return;
+        }
+        
+        // Search in tags
+        if (metadata.tags && Array.isArray(metadata.tags)) {
+          const hasMatchingTag = metadata.tags.some((tag: string) => 
+            tag.toLowerCase().includes(searchTerm)
+          );
+          if (hasMatchingTag) {
+            this.searchResults.add(node.id);
+            return;
+          }
+        }
+      }
+    });
+    
+    // Trigger re-render to show search results
+    this.render();
+    
+    // Optionally zoom to fit search results
+    if (this.searchResults.size > 0) {
+      this.zoomToSearchResults();
+    }
+  }
+
+  private zoomToSearchResults() {
+    const searchNodes = this.data.nodes.filter(node => this.searchResults.has(node.id));
+    
+    if (searchNodes.length === 0) return;
+    
+    let minX = Infinity, minY = Infinity;
+    let maxX = -Infinity, maxY = -Infinity;
+    
+    searchNodes.forEach(node => {
+      if (node.x !== undefined && node.y !== undefined) {
+        minX = Math.min(minX, node.x);
+        minY = Math.min(minY, node.y);
+        maxX = Math.max(maxX, node.x);
+        maxY = Math.max(maxY, node.y);
+      }
+    });
+    
+    if (minX === Infinity) return;
+    
+    // Add padding
+    const padding = 100;
+    minX -= padding;
+    minY -= padding;
+    maxX += padding;
+    maxY += padding;
+    
+    const width = maxX - minX;
+    const height = maxY - minY;
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    
+    // Calculate scale to fit search results
+    const scale = Math.min(
+      this.width / width,
+      this.height / height,
+      2 // Max zoom level for search
+    );
+    
+    const zoomBehavior = (this as any).zoomBehavior;
+    if (zoomBehavior) {
+      d3.select(this.canvas)
+        .transition()
+        .duration(750)
+        .call(zoomBehavior.transform, 
+          d3.zoomIdentity
+            .translate(this.width / 2, this.height / 2)
+            .scale(scale)
+            .translate(-centerX, -centerY)
+        );
+    }
   }
 }

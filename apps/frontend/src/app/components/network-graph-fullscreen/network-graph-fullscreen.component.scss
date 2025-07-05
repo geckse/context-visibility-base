@@ -13,6 +13,8 @@
   height: 100%;
   cursor: grab;
   background: transparent;
+  position: relative;
+  z-index: 1; // Below other UI elements
 
   &:active {
     cursor: grabbing;
@@ -23,11 +25,8 @@
   position: absolute;
   top: var(--spacing-lg);
   left: var(--spacing-lg);
-  background: var(--glass-panel);
-  backdrop-filter: var(--glass-panel-backdrop);
-  border: var(--glass-panel-border);
+  background: transparent;
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--glass-panel-shadow);
   padding: var(--spacing-lg);
   z-index: var(--z-index-dropdown);
   display: flex;
@@ -144,7 +143,7 @@
   border-radius: var(--border-radius-lg);
   box-shadow: var(--glass-panel-shadow);
   padding: 0;
-  z-index: var(--z-index-overlay);
+  z-index: 1000; // High z-index to ensure it's above canvas
   display: flex;
   align-items: center;
   cursor: move;
@@ -168,9 +167,18 @@
   background: transparent;
   border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
   color: var(--color-text-primary);
+  cursor: text !important; // Force text cursor
+  user-select: text !important; // Allow text selection
+  pointer-events: all !important; // Ensure it can receive events
+  position: relative; // Ensure proper stacking
+  z-index: 1; // Above the drag handle
 
   &::placeholder {
     color: var(--color-text-muted);
+  }
+  
+  &:focus {
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -192,5 +200,10 @@
 
   div {
     white-space: nowrap;
+  }
+  
+  .search-results-info {
+    color: #ff6b6b;
+    font-weight: 600;
   }
 }
