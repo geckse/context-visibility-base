@@ -33,6 +33,7 @@
         *ngFor="let node of selectedNodes.slice(0, 5); let i = index" 
         class="selection-card"
         [style.transform]="'translateX(' + (i * 15) + 'px) translateY(' + (i * -2) + 'px)'"
+        [style.--card-x]="(i * 15) + 'px'"
         [style.z-index]="selectedNodes.length - i"
         (click)="onNodeClick({nodeId: node.id, collectionName: selectedCollection})">
         <h4>{{ node.label }}</h4>
