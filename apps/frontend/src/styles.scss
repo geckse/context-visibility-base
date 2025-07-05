@@ -1,0 +1,139 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@phosphor-icons/web/thin';
+
+:root {
+  /* Primary Colors */
+  --color-primary: #007bff;
+  --color-primary-hover: #0056b3;
+  --color-primary-light: rgba(0, 123, 255, 0.25);
+  
+  /* Pastel Color Palette for Node Groups */
+  --color-pastel-blue: #a8d8ea;
+  --color-pastel-purple: #aa96da;
+  --color-pastel-pink: #fcbad3;
+  --color-pastel-coral: #ffb3ba;
+  --color-pastel-peach: #ffdfba;
+  --color-pastel-yellow: #ffffba;
+  --color-pastel-mint: #baffc9;
+  --color-pastel-sage: #bae1ff;
+  --color-pastel-lavender: #e0aaff;
+  --color-pastel-rose: #ffc9de;
+  --color-pastel-cream: #fff2cc;
+  --color-pastel-seafoam: #c7f0db;
+  
+  /* Darker variants for node borders */
+  --color-pastel-blue-dark: #7bb3d3;
+  --color-pastel-purple-dark: #9381c7;
+  --color-pastel-pink-dark: #f8a2c0;
+  --color-pastel-coral-dark: #ff9da6;
+  --color-pastel-peach-dark: #ffcf9e;
+  --color-pastel-yellow-dark: #ffff9e;
+  --color-pastel-mint-dark: #9effb5;
+  --color-pastel-sage-dark: #9dd1ff;
+  --color-pastel-lavender-dark: #d494ff;
+  --color-pastel-rose-dark: #ffb5d1;
+  --color-pastel-cream-dark: #ffe6b3;
+  --color-pastel-seafoam-dark: #b3e8c8;
+  
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e0e0e0;
+  --color-gray-300: #dee2e6;
+  --color-gray-400: #ced4da;
+  --color-gray-500: #999999;
+  --color-gray-600: #666666;
+  --color-gray-700: #333333;
+  --color-gray-800: #212529;
+  --color-gray-900: #000000;
+  
+  /* Background Colors */
+  --color-background: #f0f0f0;
+  --color-background-canvas: #fafafa;
+  --color-background-panel: #f8f9fa;
+  --color-background-card: #ffffff;
+  --color-background-overlay: rgba(255, 255, 255, 0.95);
+  
+  /* Border Colors */
+  --color-border: #ddd;
+  --color-border-light: #e0e0e0;
+  --color-border-focus: #007bff;
+  
+  /* Text Colors */
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+  --color-text-disabled: #6c757d;
+  
+  /* Shadow Colors */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 2px 12px rgba(0, 0, 0, 0.1);
+  --shadow-heavy: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  
+  /* Border Radius */
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', 'Source Code Pro', monospace;
+  
+  /* Z-index levels */
+  --z-index-dropdown: 100;
+  --z-index-overlay: 200;
+  --z-index-modal: 300;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Glassmorphism Effects */
+  --glass-background: rgba(255, 255, 255, 0.25);
+  --glass-background-dark: rgba(255, 255, 255, 0.15);
+  --glass-background-light: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --glass-blur: blur(6px);
+  --glass-blur-strong: blur(12px);
+  --glass-blur-subtle: blur(4px);
+  --glass-saturate: saturate(180%);
+  
+  /* Glassmorphism Combinations */
+  --glass-panel: var(--glass-background);
+  --glass-panel-backdrop: var(--glass-blur) var(--glass-saturate);
+  --glass-panel-border: 1px solid var(--glass-border);
+  --glass-panel-shadow: var(--glass-shadow);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-family-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+
+  /* greyish glassy background gradient */
+  background: linear-gradient(to bottom, #edebee, #b9bdbd);
+
+}

@@ -1,0 +1,196 @@
+.graph-fullscreen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-background);
+  font-family: var(--font-family-base);
+}
+
+.graph-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  background: transparent;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.collection-panel {
+  position: absolute;
+  top: var(--spacing-lg);
+  left: var(--spacing-lg);
+  background: var(--glass-panel);
+  backdrop-filter: var(--glass-panel-backdrop);
+  border: var(--glass-panel-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--glass-panel-shadow);
+  padding: var(--spacing-lg);
+  z-index: var(--z-index-dropdown);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: 14px;
+
+  label {
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 14px;
+    background: var(--color-background-card);
+    min-width: 200px;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+  }
+}
+
+.loading-indicator {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.toolbar {
+  position: absolute;
+  background: var(--glass-panel);
+  backdrop-filter: var(--glass-panel-backdrop);
+  border: var(--glass-panel-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--glass-panel-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-sm);
+  z-index: var(--z-index-dropdown);
+
+  &.toolbar-left {
+    top: 50%;
+    left: var(--spacing-lg);
+    transform: translateY(-50%);
+  }
+
+  &.toolbar-right {
+    top: 50%;
+    right: var(--spacing-lg);
+    transform: translateY(-50%);
+  }
+}
+
+.toolbar-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toolbar-separator {
+  height: 1px;
+  background: var(--color-border-light);
+  margin: var(--spacing-sm) 0;
+}
+
+.tool-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-background-light);
+  backdrop-filter: var(--glass-blur-subtle);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  color: var(--color-text-primary);
+
+  &:hover {
+    background: var(--glass-background);
+    backdrop-filter: var(--glass-blur);
+    border-color: var(--glass-border);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.active {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary-hover);
+  }
+}
+
+.text-input-container {
+  position: absolute;
+  background: var(--glass-panel);
+  backdrop-filter: var(--glass-panel-backdrop);
+  border: var(--glass-panel-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--glass-panel-shadow);
+  padding: 0;
+  z-index: var(--z-index-overlay);
+  display: flex;
+  align-items: center;
+  cursor: move;
+  user-select: none;
+}
+
+.drag-handle {
+  padding: var(--spacing-md) var(--spacing-sm);
+  color: var(--color-text-muted);
+  font-size: 16px;
+  cursor: move;
+  border-right: 1px solid var(--color-border-light);
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 14px;
+  width: 300px;
+  background: transparent;
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  color: var(--color-text-primary);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+.info-panel {
+  position: absolute;
+  bottom: var(--spacing-lg);
+  left: var(--spacing-lg);
+  border: 0 !important;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  background: transparent !important;
+  font-size: 9px;
+  opacity: 0.7;
+  font-family: var(--font-family-mono);
+  box-shadow: none !important;
+  display: flex;
+  gap: var(--spacing-md);
+  color: var(--color-text-primary);
+
+  div {
+    white-space: nowrap;
+  }
+}

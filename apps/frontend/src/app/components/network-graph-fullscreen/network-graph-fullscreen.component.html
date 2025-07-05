@@ -1,0 +1,76 @@
+<div class="graph-fullscreen-container">
+  <!-- Main Canvas Area -->
+  <canvas #graphCanvas class="graph-canvas"></canvas>
+  
+  <!-- Collection Selection - Top Left -->
+  <div class="collection-panel">
+    <label for="collection-select">Collection:</label>
+    <select id="collection-select" 
+            [value]="selectedCollection" 
+            (change)="onCollectionChange($any($event.target).value)" 
+            [disabled]="isLoading">
+      <option value="">Select collection...</option>
+      <option *ngFor="let collection of collections" [value]="collection.name">
+        {{ collection.name }} ({{ collection.points_count }})
+      </option>
+    </select>
+    <div class="loading-indicator" *ngIf="isLoading">Loading...</div>
+  </div>
+
+  <!-- Left Toolbar - Selection Tools -->
+  <div class="toolbar toolbar-left">
+    <button class="tool-btn" [class.active]="selectedTool === 'pointer'" (click)="selectTool('pointer')" title="Pointer">
+      <i class="ph-thin ph-cursor" style="font-size: 18px;"></i>
+    </button>
+    <button class="tool-btn" [class.active]="selectedTool === 'lasso'" (click)="selectTool('lasso')" title="Lasso Selection">
+      <i class="ph-thin ph-lasso" style="font-size: 18px;"></i>
+    </button>
+    <button class="tool-btn" [class.active]="selectedTool === 'rectangle'" (click)="selectTool('rectangle')" title="Rectangle Selection">
+      <i class="ph-thin ph-selection" style="font-size: 18px;"></i>
+    </button>
+    <button class="tool-btn" [class.active]="selectedTool === 'circle'" (click)="selectTool('circle')" title="Circle Selection">
+      <i class="ph-thin ph-circle-dashed" style="font-size: 18px;"></i>
+    </button>
+  </div>
+
+  <!-- Right Toolbar - Zoom/Pan Controls -->
+  <div class="toolbar toolbar-right">
+    <button class="tool-btn" (click)="zoomIn()" title="Zoom In">
+      <i class="ph-thin ph-magnifying-glass-plus" style="font-size: 18px;"></i>
+    </button>
+    <button class="tool-btn" (click)="zoomOut()" title="Zoom Out">
+      <i class="ph-thin ph-magnifying-glass-minus" style="font-size: 18px;"></i>
+    </button>
+    <button class="tool-btn" (click)="resetZoom()" title="Reset Zoom">
+      <i class="ph-thin ph-arrows-clockwise" style="font-size: 18px;"></i>
+    </button>
+    <button class="tool-btn" (click)="fitToScreen()" title="Fit to Screen">
+      <i class="ph-thin ph-corners-out" style="font-size: 18px;"></i>
+    </button>
+    <div class="toolbar-separator"></div>
+    <button class="tool-btn" [class.active]="isPanning" (click)="togglePan()" title="Pan Mode">
+      <i class="ph-thin ph-hand" style="font-size: 18px;"></i>
+    </button>
+  </div>
+
+  <!-- Draggable Text Input -->
+  <div #textInputContainer class="text-input-container" 
+       [style.left.px]="textInputPosition.x" 
+       [style.top.px]="textInputPosition.y"
+       (mousedown)="startDrag($event)">
+    <div class="drag-handle">⋮⋮</div>
+    <input type="text" 
+           class="search-input" 
+           placeholder="Search nodes..."
+           [(ngModel)]="searchText"
+           (input)="onSearchChange()">
+  </div>
+
+  <!-- Info Panel -->
+  <div class="info-panel">
+    <div>Nodes: {{ data.nodes.length }}</div>
+    <div>Links: {{ data.links.length }}</div>
+    <div>FPS: {{ fps.toFixed(1) }}</div>
+    <div>Tool: {{ selectedTool }}</div>
+  </div>
+</div>

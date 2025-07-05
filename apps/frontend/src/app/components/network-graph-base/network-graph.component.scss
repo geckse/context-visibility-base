@@ -1,0 +1,74 @@
+.network-graph-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.graph-container {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-light);
+  background: var(--color-background-card);
+  overflow: hidden;
+}
+
+.zoom-controls {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  z-index: var(--z-index-dropdown);
+}
+
+.zoom-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  background: var(--color-background-card);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-light);
+
+  &:hover {
+    background: var(--color-gray-100);
+    border-color: var(--color-gray-500);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+:host ::ng-deep svg {
+  .links line {
+    stroke: var(--color-gray-500);
+    stroke-opacity: 0.6;
+  }
+
+  .nodes circle {
+    cursor: pointer;
+    transition: var(--transition-medium);
+  }
+
+  .nodes circle:hover {
+    stroke: var(--color-text-primary);
+    stroke-width: 3px;
+  }
+
+  .nodes text {
+    pointer-events: none;
+    font-size: 12px;
+    fill: var(--color-text-primary);
+  }
+}

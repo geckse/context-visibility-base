@@ -1,0 +1,35 @@
+{
+  "name": "context-visibility-base",
+  "version": "1.0.0",
+  "description": "Agent Knowledge Base visualization with D3.js Network Graph for Vector Database relations",
+  "private": true,
+  "workspaces": [
+    "apps/frontend",
+    "apps/backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace=apps/frontend",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "build": "npm run build --workspace=apps/backend && npm run build --workspace=apps/frontend",
+    "build:frontend": "npm run build --workspace=apps/frontend",
+    "build:backend": "npm run build --workspace=apps/backend",
+    "test": "npm run test --workspace=apps/backend && npm run test --workspace=apps/frontend",
+    "lint": "npm run lint --workspace=apps/backend && npm run lint --workspace=apps/frontend",
+    "start": "npm run start --workspace=apps/backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "vector-database",
+    "qdrant",
+    "d3js",
+    "angular",
+    "nodejs",
+    "knowledge-base",
+    "visualization"
+  ],
+  "author": "",
+  "license": "MIT"
+}

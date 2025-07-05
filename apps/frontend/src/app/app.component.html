@@ -1,0 +1,88 @@
+<div class="app-container">
+  <header class="header">
+    <h1>{{ title }}</h1>
+    <p>Vector Database Knowledge Base Visualization</p>
+  </header>
+
+  <div class="content">
+    <div class="visualization-container">
+      <app-network-graph-fullscreen 
+        [data]="graphData"
+        [collections]="collections"
+        [selectedCollection]="selectedCollection"
+        [isLoading]="isLoading"
+        (collectionChange)="onCollectionChange($event)"
+        (nodeClick)="onNodeClick($event)"
+        (selectionChange)="onSelectionChange($event)">
+      </app-network-graph-fullscreen>
+    </div>
+  </div>
+</div>
+
+<!-- Selected Nodes Card Stack -->
+<div class="selection-cards" *ngIf="selectedNodes.length > 0">
+  <div class="selection-header">
+    <span class="selection-count">{{ selectedNodes.length }} nodes selected</span>
+    <button class="clear-btn" (click)="selectedNodes = []">
+      <i class="ph ph-x"></i>
+    </button>
+  </div>
+  <div class="cards-container">
+    <div class="card-stack" [style.width.px]="Math.min(selectedNodes.length * 15 + 200, 400)">
+      <div 
+        *ngFor="let node of selectedNodes.slice(0, 5); let i = index" 
+        class="selection-card"
+        [style.transform]="'translateX(' + (i * 15) + 'px) translateY(' + (i * -2) + 'px)'"
+        [style.z-index]="selectedNodes.length - i"
+        (click)="onNodeClick({nodeId: node.id, collectionName: selectedCollection})">
+        <h4>{{ node.label }}</h4>
+        <p *ngIf="node.payload?.metadata?.summary">{{ node.payload.metadata.summary }}</p>
+        <div class="card-tags" *ngIf="node.payload?.metadata?.tags?.length">
+          <span class="mini-tag" *ngFor="let tag of node.payload.metadata.tags.slice(0, 3)">{{ tag }}</span>
+        </div>
+      </div>
+      <div class="more-indicator" *ngIf="selectedNodes.length > 5">
+        +{{ selectedNodes.length - 5 }} more
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Node Details Modal -->
+<div class="node-details-overlay" *ngIf="showNodeDetails" (click)="closeNodeDetails()">
+  <div class="node-details-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ selectedNodeDetails?.label || 'Node Details' }}</h3>
+      <button class="close-btn" (click)="closeNodeDetails()">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+    <div class="modal-content" *ngIf="selectedNodeDetails">
+      <div class="detail-section">
+        <h4>Metadata</h4>
+        <div class="metadata-grid">
+          <div class="metadata-item" *ngIf="selectedNodeDetails.metadata?.domain">
+            <span class="label">Domain:</span>
+            <span class="value">{{ selectedNodeDetails.metadata.domain }}</span>
+          </div>
+          <div class="metadata-item" *ngIf="selectedNodeDetails.metadata?.tags?.length">
+            <span class="label">Tags:</span>
+            <div class="tags">
+              <span class="tag" *ngFor="let tag of selectedNodeDetails.metadata.tags">{{ tag }}</span>
+            </div>
+          </div>
+          <div class="metadata-item" *ngIf="selectedNodeDetails.metadata?.summary">
+            <span class="label">Summary:</span>
+            <span class="value">{{ selectedNodeDetails.metadata.summary }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="detail-section" *ngIf="selectedNodeDetails.content">
+        <h4>Content</h4>
+        <div class="content-text">{{ selectedNodeDetails.content }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet />
